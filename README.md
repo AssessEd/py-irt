@@ -1,9 +1,8 @@
-[![Build Status](https://travis-ci.com/nd-ball/py-irt.svg?branch=master)](https://travis-ci.com/nd-ball/py-irt)
-[![codecov.io](https://codecov.io/gh/nd-ball/py-irt/coverage.svg?branch=master)](https://codecov.io/gh/nd-ball/py-irt)
-
 # py-irt
 
-Bayesian IRT models in Python
+A local fork from the [repo](https://travis-ci.com/nd-ball/py-irt)
+
+It implements Bayesian IRT models in Python
 
 ## Overview
 
