@@ -47,7 +47,7 @@ from py_irt.models import (
     multidim_2pl,
     amortized_1pl
 )
-from py_irt.io import safe_file, write_json
+from py_irt.io import write_json
 from py_irt.dataset import Dataset
 from py_irt.initializers import INITIALIZERS, IrtInitializer
 from py_irt.config import IrtConfig
@@ -79,6 +79,7 @@ class IrtModelTrainer:
         self._verbose = verbose
         self.best_params = None
         self.amortized = "amortized" in self._config.model_type
+        
         if dataset is None:
             self._dataset = Dataset.from_jsonlines(data_path, amortized=self.amortized)
         else:
@@ -183,15 +184,19 @@ class IrtModelTrainer:
                 if loss < best_loss:
                     best_loss = loss
                     self.best_params = self.export(items)
+                    write_json(self._config.output_dir  / "best_parameters.json", self.best_params)
                 scheduler.step()
                 current_lr = current_lr * self._config.lr_decay
                 if epoch % 100 == 0:
                     table.add_row(
                         f"{epoch + 1}", "%.4f" % loss, "%.4f" % best_loss, "%.4f" % current_lr
                     )
-
+                if self._config.ckp_frequency and epoch > 0 and (epoch % self._config.ckp_frequency == 0 or epoch == epochs-1):
+                    self.save(epoch)
+                
             table.add_row(f"{epoch + 1}", "%.4f" % loss, "%.4f" % best_loss, "%.4f" % current_lr)
             self.last_params = self.export(items)
+            write_json(self._config.output_dir / "parameters.json", self.last_params)
 
     def export(self, items):
         if self.amortized:
@@ -207,5 +212,9 @@ class IrtModelTrainer:
         results["subject_ids"] = self._dataset.ix_to_subject_id
         return results
 
-    def save(self, output_path: Union[str, Path]):
-        write_json(safe_file(output_path), self.last_params)
+    def save(self, epoch:int=0):
+        self.irt_model.save_model(self._config.output_dir / f'ckp_{epoch}.pt') 
+
+
+    def load(self, path:Path):
+        self.irt_model.load_model(path) 

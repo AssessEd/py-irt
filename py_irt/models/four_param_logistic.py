@@ -32,7 +32,7 @@ import torch
 import torch.distributions.constraints as constraints
 from pyro.infer import EmpiricalMarginal
 from rich.console import Console
-
+from pathlib import Path
 import numpy as np
 
 console = Console()
@@ -221,6 +221,18 @@ class FourParamLog(abstract_model.IrtModel):
             "disc": pyro.param("loc_disc").data.tolist(),
             "lambdas": pyro.param("lambdas").data.tolist(),
         }
+
+    def save_model(self, path:Path):
+        "Saving pyro parameters in a file"
+        pyro.get_param_store().save(path)        
+        
+        
+    def load_model(self, path:Path):
+        "Loading pyro parameters from a file"
+        param_store = pyro.ParamStoreDict.load(path)
+        pyro.set_param_store(param_store)
+        
+
 
     def predict(self, subjects, items, params_from_file=None):
         """predict p(correct | params) for a specified list of model, item pairs"""

@@ -27,7 +27,7 @@ from pydantic import BaseModel
 # This registers all models with the registry
 # pylint: disable=unused-import
 from py_irt.models import *
-
+from pathlib import Path
 
 class IrtConfig(BaseModel):
     model_type: str
@@ -40,3 +40,6 @@ class IrtConfig(BaseModel):
     dropout: float = 0.5
     hidden: int = 100
     vocab_size: Optional[int] = None
+    output_dir: Path = Path("logs/.")
+    ckp_frequency: int = 0
+        

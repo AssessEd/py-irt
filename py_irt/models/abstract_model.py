@@ -23,6 +23,7 @@
 
 import abc
 from typing import Dict, Any
+from pathlib import Path
 
 
 _IRT_REGISTRY = {}
@@ -76,4 +77,12 @@ class IrtModel(abc.ABC):
 
     @abc.abstractmethod
     def export(self) -> Dict[str, Any]:
+        pass
+    
+    @abc.abstractmethod
+    def save_model(self, path:Path):
+        pass
+
+    @abc.abstractmethod
+    def load_model(self, path:Path):
         pass

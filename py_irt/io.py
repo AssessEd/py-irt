@@ -25,6 +25,7 @@ from typing import Any, Union, List
 from pathlib import Path
 import os
 import json
+import warnings
 from pydantic import BaseModel
 
 
@@ -95,5 +96,15 @@ def safe_file(path: Union[str, Path]) -> Union[str, Path]:
     For example, if the path passed in is /home/entilzha/stuff/stuff/test.txt,
     this function will run the equivalent of mkdir -p /home/entilzha/stuff/stuff/
     """
+    warnings.WarningMessage("This function is deprecated and will be removed in future updates")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     return path
+
+
+def makedirs(path: Union[str, Path]) -> Union[str, Path]:
+    """
+    Creating paths if they don't exist.
+    For example, if the path passed in is /home/entilzha/stuff/stuff/test.txt,
+    this function will run the equivalent of mkdir -p /home/entilzha/stuff/stuff/
+    """
+    os.makedirs(path, exist_ok=True)    
