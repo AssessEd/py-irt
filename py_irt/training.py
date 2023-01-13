@@ -210,6 +210,7 @@ class IrtModelTrainer:
         results["irt_model"] = self._config.model_type
         results["item_ids"] = self._dataset.ix_to_item_id
         results["subject_ids"] = self._dataset.ix_to_subject_id
+        results['item_ixs'] = self._dataset.item_id_to_ix
         return results
 
     def save(self, epoch:int=0):
